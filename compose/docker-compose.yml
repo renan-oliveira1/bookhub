@@ -1,0 +1,23 @@
+version: '3.1'
+services:
+  db:
+    image: mysql
+    container_name: users_mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: usersdb
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3306:3306'
+  users:
+    image: "bookhub/users"
+    depends_on:
+      - db
+    container_name: users-ms
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/usersdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    command: ["sh", "-c", "dockerize -wait tcp://db:3306 -timeout 30s java -jar /app.jar"]
