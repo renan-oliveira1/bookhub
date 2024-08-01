@@ -1,0 +1,18 @@
+server:
+  port: 9090
+spring:
+  application:
+    name: "rentals"
+  datasource:
+    url: jdbc:mysql://localhost:3308/rentalsdb
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialization-mode: always
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode: always
