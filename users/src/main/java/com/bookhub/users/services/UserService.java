@@ -68,6 +68,10 @@ public class UserService  implements IUserService{
 
     @Override
     public void deleteUser(String id){
+        Optional<User> userFromDb = userRepository.findById(id);
+        if(userFromDb.isEmpty()){
+            throw new UserException("User not found!");
+        }
         userRepository.deleteById(id);
     }
 }
