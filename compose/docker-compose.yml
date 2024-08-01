@@ -9,17 +9,24 @@ services:
       MYSQL_ROOT_PASSWORD: root
     ports:
       - '3306:3306'
-#  users_ms:
-#    image: "bookhub/users"
-#    depends_on:
-#      - db
-#    container_name: users-ms
-#    ports:
-#      - "8081:8081"
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/usersdb
-#      SPRING_DATASOURCE_USERNAME: root
-#      SPRING_DATASOURCE_PASSWORD: root
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 10
+      interval: 10s
+
+  users_ms:
+    image: "bookhub/users"
+    depends_on:
+      users_db:
+        condition: service_healthy
+    container_name: users-ms
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://users_db:3306/usersdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
 
   books_db:
     image: mysql
@@ -30,3 +37,21 @@ services:
       MYSQL_ROOT_PASSWORD: root
     ports:
       - '3307:3306'
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 10
+      interval: 10s
+
+  books_ms:
+      image: "bookhub/books"
+      depends_on:
+        books_db:
+          condition: service_healthy
+      container_name: books-ms
+      ports:
+        - "8080:8080"
+      environment:
+        SPRING_DATASOURCE_URL: jdbc:mysql://books_db:3306/booksdb
+        SPRING_DATASOURCE_USERNAME: root
+        SPRING_DATASOURCE_PASSWORD: root
