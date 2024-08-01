@@ -3,6 +3,7 @@ package com.bookhub.users.controllers;
 import com.bookhub.users.dto.UserDto;
 import com.bookhub.users.dto.response.UserResponseDto;
 import com.bookhub.users.entities.User;
+import com.bookhub.users.services.IUserService;
 import com.bookhub.users.services.UserService;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
@@ -15,9 +16,9 @@ import java.util.List;
 @RequestMapping(path = "/users")
 public class UserController {
 
-    private UserService userService;
+    private IUserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(IUserService userService) {
         this.userService = userService;
     }
 
@@ -44,8 +45,8 @@ public class UserController {
 
     @DeleteMapping("/{idUser}")
     public ResponseEntity<Object> delete(@PathVariable String idUser){
+        userService.deleteUser(idUser);
         return ResponseEntity.status(HttpStatus.OK).body("User Deleted!");
     }
-
 
 }

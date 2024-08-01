@@ -13,5 +13,4 @@ public class GlobalException {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-
 }
