@@ -11,6 +11,7 @@
 	<groupId>com.bookhub</groupId>
 	<artifactId>books</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>books</name>
 	<description>Project to practice the implementation of microservice</description>
 	<url/>
@@ -78,6 +79,16 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.3</version>
+				<configuration>
+					<to>
+						<image>bookhub/${project.artifactId}</image>
+					</to>
 				</configuration>
 			</plugin>
 		</plugins>
