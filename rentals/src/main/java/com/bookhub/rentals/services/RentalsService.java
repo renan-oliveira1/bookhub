@@ -6,6 +6,8 @@ import com.bookhub.rentals.entities.Rental;
 import com.bookhub.rentals.exception.RentalException;
 import com.bookhub.rentals.repositories.RentalsRepository;
 import org.apache.catalina.mapper.Mapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,7 +35,7 @@ public class RentalsService implements IRentalsService{
     }
 
     @Override
-    public List<RentalDto> findRentalsOfUser(String idUser) {
+    public List<RentalDto> findRentalsByUser(String idUser) {
         return rentalsRepository.findByUserId(idUser).stream().map(RentalMapper::toDto).toList();
     }
 
@@ -47,7 +49,7 @@ public class RentalsService implements IRentalsService{
     }
 
     @Override
-    public List<RentalDto> findRentalsOfBook(String idBook) {
+    public List<RentalDto> findRentalsByBook(String idBook) {
         return rentalsRepository.findByBookId(idBook).stream().map(RentalMapper::toDto).toList();
     }
 
@@ -58,6 +60,9 @@ public class RentalsService implements IRentalsService{
 
     @Override
     public RentalDto update(RentalDto rentalDto) {
+        if(rentalDto.id().isEmpty()){
+            throw new RentalException("Rental request with empty id!!");
+        }
         Optional<Rental> optionalRental = rentalsRepository.findById(rentalDto.id());
         if(optionalRental.isEmpty()){
             throw new RentalException("Rental not found!!");
