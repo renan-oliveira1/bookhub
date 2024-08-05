@@ -27,10 +27,18 @@ public class RentalsService implements IRentalsService{
     @Override
     public RentalDto save(RentalDto rentalDto) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate loanDate = LocalDate.parse(rentalDto.loanDate(), formatter);
+        LocalDate loanDate;
+        if(rentalDto.loanDate() != null){
+            loanDate = LocalDate.parse(rentalDto.loanDate(), formatter);
+        }else{
+            loanDate = LocalDate.now();
+        }
         LocalDate returnDate = LocalDate.parse(rentalDto.returnedDate(), formatter);
+        if(!returnDate.isAfter(loanDate)){
+            throw new RentalException("Return date can't be before the loan date!");
+        }
         LocalDate updatedDate = LocalDate.now();
-        Rental savedData = RentalMapper.toEntity(rentalDto, loanDate, returnDate, updatedDate);
+        Rental savedData = rentalsRepository.save(RentalMapper.toEntity(rentalDto, loanDate, returnDate, updatedDate));
         return RentalMapper.toDto(savedData);
     }
 
@@ -73,6 +81,9 @@ public class RentalsService implements IRentalsService{
             throw new RentalException("Can't update the loan date!");
         }
         LocalDate returnDate = LocalDate.parse(rentalDto.returnedDate(), formatter);
+        if(!returnDate.isAfter(loanDate)){
+            throw new RentalException("Return date can't be before the loan date!");
+        }
         LocalDate updatedDate = LocalDate.now();
         Rental updatedRental = rentalsRepository.save(RentalMapper.toEntity(rentalDto, loanDate, returnDate, updatedDate));
         return RentalMapper.toDto(updatedRental);
@@ -80,6 +91,9 @@ public class RentalsService implements IRentalsService{
 
     @Override
     public void delete(String idRental) {
+        if(!rentalsRepository.existsById(idRental)){
+            throw new RentalException("Rental not found!");
+        }
         rentalsRepository.deleteById(idRental);
     }
 }
