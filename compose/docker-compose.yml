@@ -70,3 +70,16 @@ services:
       timeout: 10s
       retries: 10
       interval: 10s
+
+  rentals_ms:
+    image: "bookhub/books"
+    depends_on:
+      books_db:
+        condition: service_healthy
+    container_name: rentals-ms
+    ports:
+      - "9090:9090"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://rentals_db:3306/rentalsdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
