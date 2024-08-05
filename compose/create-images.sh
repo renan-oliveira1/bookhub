@@ -5,3 +5,5 @@ cd ../users
 mvn compile jib:dockerBuild
 cd ../books
 mvn compile jib:dockerBuild
+cd ../rentals
+mvn compile jib:dockerBuild
