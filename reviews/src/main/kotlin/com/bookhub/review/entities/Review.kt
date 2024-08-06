@@ -13,6 +13,7 @@ data class Review(
     @UuidGenerator
     val id: String,
     val userId: String,
+    val bookId: String,
     val comment: String,
     val stars: Int,
     val createdAt: LocalDate,

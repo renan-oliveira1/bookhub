@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.bookhub</groupId>
-	<artifactId>review</artifactId>
+	<artifactId>reviews</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>review</name>
+	<name>reviews</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -118,6 +118,16 @@
 						<version>${kotlin.version}</version>
 					</dependency>
 				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.3</version>
+				<configuration>
+					<to>
+						<image>bookhub/${project.artifactId}</image>
+					</to>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
