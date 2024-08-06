@@ -7,3 +7,5 @@ cd ../books
 mvn compile jib:dockerBuild
 cd ../rentals
 mvn compile jib:dockerBuild
+cd ../reviews
+mvn compile jib:dockerBuild
