@@ -1,0 +1,8 @@
+build:
+  version: "3.0"
+
+accounts:
+  message: "Welcome to ORIGINAL from books"
+  contactDetails:
+    name: "ORIGINAL"
+    email: "original@original.com"
