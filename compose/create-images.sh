@@ -9,3 +9,5 @@ cd ../rentals
 mvn compile jib:dockerBuild
 cd ../reviews
 mvn compile jib:dockerBuild
+cd ../configserver
+mvn compile jib:dockerBuild
