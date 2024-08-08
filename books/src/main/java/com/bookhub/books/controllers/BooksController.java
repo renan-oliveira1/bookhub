@@ -1,7 +1,10 @@
 package com.bookhub.books.controllers;
 
 import com.bookhub.books.dto.BookDto;
+import com.bookhub.books.dto.BooksContactInfoDto;
 import com.bookhub.books.services.IBooksService;
+import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +15,10 @@ import java.util.List;
 @RequestMapping(path = "/books")
 public class BooksController {
     private IBooksService iBooksService;
+
+
+    @Autowired
+    private BooksContactInfoDto booksContactInfoDto;
 
     public BooksController(IBooksService iBooksService) {
         this.iBooksService = iBooksService;
@@ -52,5 +59,10 @@ public class BooksController {
     public ResponseEntity<Object> delete(@PathVariable String idBook){
         iBooksService.delete(idBook);
         return ResponseEntity.status(HttpStatus.OK).body("Book deleted!");
+    }
+
+    @GetMapping("/contact-info")
+    public ResponseEntity<BooksContactInfoDto> getContactInfo(){
+        return ResponseEntity.status(HttpStatus.OK).body(booksContactInfoDto);
     }
 }
