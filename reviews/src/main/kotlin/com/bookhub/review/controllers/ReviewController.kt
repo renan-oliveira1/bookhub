@@ -1,7 +1,9 @@
 package com.bookhub.review.controllers
 
 import com.bookhub.review.dto.ReviewDto
+import com.bookhub.review.dto.ReviewsContactInfo
 import com.bookhub.review.services.IReviewsService
+import org.apache.coyote.Response
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -9,7 +11,7 @@ import java.util.Objects
 
 @RestController
 @RequestMapping(path = arrayOf("reviews"))
-class ReviewController(private val reviewService: IReviewsService) {
+class ReviewController(private val reviewService: IReviewsService, private val reviewsContactInfo: ReviewsContactInfo) {
 
     @PostMapping()
     fun saveReview(@RequestBody reviewDto: ReviewDto): ResponseEntity<ReviewDto>{
@@ -39,5 +41,10 @@ class ReviewController(private val reviewService: IReviewsService) {
     @DeleteMapping("{idReview}")
     fun delete(@PathVariable idReview: String): ResponseEntity<String>{
         return ResponseEntity.status(HttpStatus.OK).body("Review Deleted!!")
+    }
+
+    @GetMapping("/contact-info")
+    fun getReviewContactIngo(): ResponseEntity<ReviewsContactInfo>{
+        return ResponseEntity.status(HttpStatus.OK).body(reviewsContactInfo)
     }
 }

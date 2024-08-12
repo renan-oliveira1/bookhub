@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: "reviews"
+  profiles:
+    active: "qa"
   datasource:
     url: jdbc:mysql://localhost:3309/reviewsdb
     username: root
@@ -16,3 +18,5 @@ spring:
   sql:
     init:
       mode: always
+  config:
+    import: "configserver:http://localhost:8071/"

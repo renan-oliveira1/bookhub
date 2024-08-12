@@ -1,0 +1,8 @@
+build:
+  version: "2.0"
+
+accounts:
+  message: "Welcome to QA from reviews"
+  contactDetails:
+    name: "ORIGINAL"
+    email: "QA@qa.com"
