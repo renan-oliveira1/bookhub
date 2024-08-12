@@ -1,0 +1,8 @@
+build:
+  version: "1.0"
+
+accounts:
+  message: "Welcome to QA from users"
+  contactDetails:
+    name: "QA Lead"
+    email: "QA@qa.com"
