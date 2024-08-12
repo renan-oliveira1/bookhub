@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: "rentals"
+  profiles:
+    active: "qa"
   datasource:
     url: jdbc:mysql://localhost:3308/rentalsdb
     username: root
@@ -16,3 +18,5 @@ spring:
   sql:
     init:
       mode: always
+  config:
+    import: "configserver:http://localhost:8071/"

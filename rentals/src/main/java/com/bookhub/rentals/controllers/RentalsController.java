@@ -1,7 +1,9 @@
 package com.bookhub.rentals.controllers;
 
 import com.bookhub.rentals.dto.RentalDto;
+import com.bookhub.rentals.dto.RentalsContactInfoDto;
 import com.bookhub.rentals.services.IRentalsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,8 @@ import java.util.List;
 public class RentalsController {
 
     private IRentalsService rentalsService;
+    @Autowired
+    private RentalsContactInfoDto rentalsContactInfoDto;
 
     public RentalsController(IRentalsService rentalsService) {
         this.rentalsService = rentalsService;
@@ -52,5 +56,10 @@ public class RentalsController {
     public ResponseEntity<Object> delete(@PathVariable String idRental){
         rentalsService.delete(idRental);
         return ResponseEntity.status(HttpStatus.OK).body("Rental deleted!");
+    }
+
+    @GetMapping("/contact-info")
+    public ResponseEntity<RentalsContactInfoDto> getContactInfo(){
+        return ResponseEntity.status(HttpStatus.OK).body(rentalsContactInfoDto);
     }
 }

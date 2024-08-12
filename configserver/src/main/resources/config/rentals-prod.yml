@@ -1,0 +1,8 @@
+build:
+  version: "2.0"
+
+accounts:
+  message: "Welcome to QA from rentals"
+  contactDetails:
+    name: "QA"
+    email: "qa@qa.com"

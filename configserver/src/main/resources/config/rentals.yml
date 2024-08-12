@@ -1,0 +1,8 @@
+build:
+  version: "2.0"
+
+accounts:
+  message: "Welcome to ORIGINAL from rentals"
+  contactDetails:
+    name: "ORIGINAL"
+    email: "original@original.com"
