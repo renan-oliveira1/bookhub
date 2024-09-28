@@ -1,5 +1,19 @@
 version: '3.1'
 services:
+  configserver_ms:
+    image: "bookhub/configserver"
+    container_name: configserver-ms
+    ports:
+      - "8071:8071"
+    networks:
+      - bookhub
+    healthcheck:
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
   users_db:
     image: mysql
     container_name: users_mysql
@@ -20,94 +34,127 @@ services:
     depends_on:
       users_db:
         condition: service_healthy
+      configserver_ms:
+        condition: service_healthy
     container_name: users-ms
+    networks:
+      - bookhub
     ports:
       - "8081:8081"
     environment:
+      SPRING_APPLICATION_NAME: "users"
       SPRING_DATASOURCE_URL: jdbc:mysql://users_db:3306/usersdb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+      SPRING_CONFIG_IMPORT: configserver:http://configserver_ms:8071/
+      SPRING_PROFILES_ACTIVE: qa
 
-  books_db:
-    image: mysql
-    container_name: books_mysql
-    restart: always
-    environment:
-      MYSQL_DATABASE: booksdb
-      MYSQL_ROOT_PASSWORD: root
-    ports:
-      - '3307:3306'
-    healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
-      timeout: 10s
-      retries: 10
-      interval: 10s
+#  books_db:
+#    image: mysql
+#    container_name: books_mysql
+#    restart: always
+#    environment:
+#      MYSQL_DATABASE: booksdb
+#      MYSQL_ROOT_PASSWORD: root
+#    ports:
+#      - '3307:3306'
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+#      timeout: 10s
+#      retries: 10
+#      interval: 10s
+#
+#  books_ms:
+#    image: "bookhub/books"
+#    depends_on:
+#      books_db:
+#        condition: service_healthy
+#    container_name: books-ms
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:mysql://books_db:3306/booksdb
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: root
+#
+#  rentals_db:
+#    image: mysql
+#    container_name: rentals_mysql
+#    restart: always
+#    environment:
+#      MYSQL_DATABASE: rentalsdb
+#      MYSQL_ROOT_PASSWORD: root
+#    ports:
+#      - '3308:3306'
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+#      timeout: 10s
+#      retries: 10
+#      interval: 10s
+#
+#  rentals_ms:
+#    image: "bookhub/books"
+#    depends_on:
+#      books_db:
+#        condition: service_healthy
+#    container_name: rentals-ms
+#    ports:
+#      - "9090:9090"
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:mysql://rentals_db:3306/rentalsdb
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: root
+#
+#  reviews_db:
+#    image: mysql
+#    container_name: reviews_mysql
+#    restart: always
+#    environment:
+#      MYSQL_DATABASE: reviewsdb
+#      MYSQL_ROOT_PASSWORD: root
+#    ports:
+#      - '3309:3306'
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+#      timeout: 10s
+#      retries: 10
+#      interval: 10s
+#
+#  reviews_ms:
+#      image: "bookhub/reviews"
+#      depends_on:
+#        books_db:
+#          condition: service_healthy
+#      container_name: reviews-ms
+#      ports:
+#        - "9080:9080"
+#      environment:
+#        SPRING_DATASOURCE_URL: jdbc:mysql://reviews_db:3306/reviewsdb
+#        SPRING_DATASOURCE_USERNAME: root
+#        SPRING_DATASOURCE_PASSWORD: root
+#
 
-  books_ms:
-    image: "bookhub/books"
-    depends_on:
-      books_db:
-        condition: service_healthy
-    container_name: books-ms
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://books_db:3306/booksdb
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+#  eureka_ms:
+#    image: "bookhub/eurekaserver"
+#    container_name: eureka-ms
+#    ports:
+#      - "8070:8070"
+#    networks:
+#      - bookhub
+#    depends_on:
+#      configserver_ms:
+#        condition: service_healthy
+#    healthcheck:
+#      test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#      start_period: 10s
+#    environment:
+#      SPRING_PROFILES_ACTIVE: qa
+##      SPRING_CONFIG_IMPORT: configserver:http://configserver-ms:8071/
+#      SPRING_CLOUD_CONFIG_URI: http://configserver_ms:8071
 
-  rentals_db:
-    image: mysql
-    container_name: rentals_mysql
-    restart: always
-    environment:
-      MYSQL_DATABASE: rentalsdb
-      MYSQL_ROOT_PASSWORD: root
-    ports:
-      - '3308:3306'
-    healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
-      timeout: 10s
-      retries: 10
-      interval: 10s
-
-  rentals_ms:
-    image: "bookhub/books"
-    depends_on:
-      books_db:
-        condition: service_healthy
-    container_name: rentals-ms
-    ports:
-      - "9090:9090"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://rentals_db:3306/rentalsdb
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-
-  reviews_db:
-    image: mysql
-    container_name: reviews_mysql
-    restart: always
-    environment:
-      MYSQL_DATABASE: reviewsdb
-      MYSQL_ROOT_PASSWORD: root
-    ports:
-      - '3309:3306'
-    healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
-      timeout: 10s
-      retries: 10
-      interval: 10s
-
-  reviews_ms:
-      image: "bookhub/reviews"
-      depends_on:
-        books_db:
-          condition: service_healthy
-      container_name: reviews-ms
-      ports:
-        - "9080:9080"
-      environment:
-        SPRING_DATASOURCE_URL: jdbc:mysql://reviews_db:3306/reviewsdb
-        SPRING_DATASOURCE_USERNAME: root
-        SPRING_DATASOURCE_PASSWORD: root
+networks:
+  bookhub:
+    driver: "bridge"

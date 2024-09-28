@@ -2,4 +2,21 @@ spring:
   application:
     name: "eurekaserver"
   config:
-    import: "configserver:http://localhost:8071/"
+#    import: "configserver:http://localhost:8071/"
+    uri: http://configserver_ms:8071
+server:
+  port: 8070
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true

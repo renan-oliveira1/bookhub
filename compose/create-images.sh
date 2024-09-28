@@ -11,3 +11,5 @@ cd ../reviews
 mvn compile jib:dockerBuild
 cd ../configserver
 mvn compile jib:dockerBuild
+cd ../eurekaserver
+mvn compile jib:dockerBuild
